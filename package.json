@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "tsc with --supress",
   "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
   "bin": {
     "tsc-silent": "./bin/tsc-silent"
   },
