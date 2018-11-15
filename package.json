@@ -1,0 +1,22 @@
+{
+  "name": "tsc-silent",
+  "version": "0.0.1",
+  "description": "tsc with --supress",
+  "main": "dist/index.js",
+  "bin": {
+    "tsc-silent": "./bin/tsc-silent"
+  },
+  "repository": "git@github.com:evolution-gaming/tsc-silent.git",
+  "author": "Evolution Gaming",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "10.12.7",
+    "yargs": "12.0.2"
+  },
+  "peerDependencies": {
+    "typescript": ">=2.9"
+  },
+  "devDependencies": {
+    "typescript": "3.1.6"
+  }
+}
