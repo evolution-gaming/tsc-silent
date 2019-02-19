@@ -191,15 +191,26 @@ function isSuppressed(code: number, fileName?: string) {
 
 function printUsage() {
     console.log("Usage:");
-    console.log("  ts-node tsc-silent.ts {options}");
+    console.log("  tsc-silent --project <path> [--suppress config | --suppressConfig path] [--compiler path]");
+    console.log("             [--watch]");
     console.log();
-    console.log("Options:");
-    console.log("  --project path/to/tsconfig.json      [required]");
-    console.log("  --compiler path/to/typescript.js");
-    console.log("  --suppress 7005,7006@node_modules/evo-.+");
-    console.log("  --suppressConfig path/to/tsc-silent.config.js | see evo-blackjack/tsc-silent.config.js");
+    console.log("Synopsis:");
+    console.log("  --project, -p    Path to tsconfig.json");
     console.log();
+    console.log("  --compiler       Path to typescript.js.");
+    console.log("                   By default, uses `./node_modules/typescript/lib/typescript.js`.");
+    console.log();
+    console.log("  --suppress       Suppressed erros.");
+    console.log("                   E.g. `--suppress 7017@src/js/ 2322,2339,2344@/src/legacy/`.")
+    console.log();
+    console.log("  --suppressConfig Path to supressed errors config.");
+    console.log("                   See documentation for examples.");
+    console.log();
+    console.log("  --watch, -w      Run in watch mode.");
+    console.log();
+    console.log("Description:");
     console.log("The purpose of the wrapper is to execute TypeScript compiler but suppress some error messages");
     console.log("coming from certain files/folders. For example, this can be used to enable `noImplicitAny` in");
     console.log("some parts of the project while keeping it disabled in others.");
+    console.log();
 }

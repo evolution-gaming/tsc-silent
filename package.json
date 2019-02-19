@@ -10,6 +10,12 @@
     "tsc-silent": "./bin/tsc-silent"
   },
   "repository": "git@github.com:evolution-gaming/tsc-silent.git",
+  "files": [
+    "/src",
+    "/dist",
+    "/bin",
+    "README.md"
+  ],
   "author": "Evolution Gaming",
   "license": "MIT",
   "dependencies": {
