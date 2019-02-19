@@ -4,7 +4,9 @@
   "description": "tsc with --supress",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc"
+    "build": "rm -r dist && tsc",
+    "version": "yarn build && git add .",
+    "postversion": "git push && git push --tags"
   },
   "bin": {
     "tsc-silent": "./bin/tsc-silent"
