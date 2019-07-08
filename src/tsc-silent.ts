@@ -4,7 +4,8 @@ interface Argv {
     compiler: string;
     project: string;
     watch: boolean;
-    help: boolean; 
+    stats: boolean;
+    help: boolean;
     suppressConfig?: string;
     _: string[];
 }
@@ -13,6 +14,7 @@ const argv: Argv = require("yargs")
     .string("compiler").default("compiler", "node_modules/typescript/lib/typescript.js")
     .string("project").alias("project", "p")
     .boolean("watch").default("watch", false).alias("watch", "w")
+    .boolean("stats").default("stats", false)
     .boolean("help")
     .parse(process.argv);
 
@@ -27,6 +29,14 @@ import * as path from "path";
 import * as ts from "typescript";
 // @ts-ignore
 ts = require(path.resolve(argv.compiler));
+
+interface StatisticsItem {
+    codes: {
+        [code: string]: number;
+    };
+    total: number;
+    pathRegExp: string;
+}
 
 interface RawSupressConfig {
     codes: number[];
@@ -131,14 +141,30 @@ function assertDiagnostics(
         return 0;
     }
 
-    const diagnosticsToShow = allowSuppress ? diagnostics.filter(e => !isSuppressed(e.code, e.file && e.file.fileName)) : diagnostics;
+    let diagnosticsToShow: ts.Diagnostic[] = [];
+    const suppressedDiagnostics: ts.Diagnostic[] = [];
+
+    if (allowSuppress) {
+        for (let d of diagnostics) {
+            if (isSuppressed(d.code, d.file && d.file.fileName)) {
+                suppressedDiagnostics.push(d);
+            } else {
+                diagnosticsToShow.push(d);
+            }
+        }
+    } else {
+        diagnosticsToShow = diagnostics;
+    }
 
     if (diagnosticsToShow.length) {
         // console.(error | warn) does not allow to grep output (OS X)
         console.log(ts.formatDiagnosticsWithColorAndContext(diagnosticsToShow, formatDiagnosticsHost));
     }
     if (allowSuppress) {
-        console.warn(`Visible errors: ${diagnosticsToShow.length}, suppressed errors: ${diagnostics.length - diagnosticsToShow.length}`);
+        if (argv.stats) {
+            console.log(JSON.stringify(getStatistics(suppressedDiagnostics), null, "  "));
+        }
+        console.warn(`Visible errors: ${diagnosticsToShow.length}, suppressed errors: ${suppressedDiagnostics.length}`);
     }
     if (diagnosticsToShow.length) {
         return 2;
@@ -189,6 +215,31 @@ function isSuppressed(code: number, fileName?: string) {
     return false;
 }
 
+function getStatistics(suppressedDiagnostics: ts.Diagnostic[]): StatisticsItem[] {
+    const statistics = [];
+    for (const suppress of supressConfig) {
+        const statisticsItemCodes: StatisticsItem["codes"] = {};
+        for (let code of suppress.codes) {
+            statisticsItemCodes[code] = 0;
+        }
+        const statisticsItem: StatisticsItem = {
+            codes: statisticsItemCodes,
+            pathRegExp: (suppress.pathRegExp || "").toString(),
+            total: 0,
+        };
+        statistics.push(statisticsItem);
+        for (let suppressedDiag of suppressedDiagnostics) {
+            if (suppress.pathRegExp && suppress.pathRegExp.test(suppressedDiag.file!.fileName)) {
+                statisticsItem.total++;
+                if (suppress.codes.length && suppress.codes.indexOf(suppressedDiag.code) !== -1) {
+                    statisticsItemCodes[suppressedDiag.code]++;
+                }
+            }
+        }
+    }
+    return statistics;
+}
+
 function printUsage() {
     console.log("Usage:");
     console.log("  tsc-silent --project <path> [--suppress config | --suppressConfig path] [--compiler path]");
@@ -207,6 +258,8 @@ function printUsage() {
     console.log("                   See documentation for examples.");
     console.log();
     console.log("  --watch, -w      Run in watch mode.");
+    console.log();
+    console.log("  --stats          Print number of suppressed errors per path and error code.");
     console.log();
     console.log("Description:");
     console.log("The purpose of the wrapper is to execute TypeScript compiler but suppress some error messages");
