@@ -6,6 +6,7 @@
   "scripts": {
     "build": "rm -r dist && tsc",
     "version": "yarn build && git add .",
+    "prepublish": "yarn build",
     "postversion": "git push && git push --tags"
   },
   "bin": {
