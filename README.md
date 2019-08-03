@@ -31,6 +31,8 @@ tsc-silent --project <path> [--suppress config | --suppressConfig path] [--compi
                  See documentation for examples.
 
 --watch, -w      Run in watch mode.
+
+--stats          Print number of suppressed errors per path and error code.
 ```
 
 ## Suppress config
