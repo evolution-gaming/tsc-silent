@@ -12,7 +12,11 @@
   "bin": {
     "tsc-silent": "./bin/tsc-silent"
   },
-  "repository": "git@github.com:evolution-gaming/tsc-silent.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/evolution-gaming/tsc-silent.git"
+  },
+  "homepage": "https://github.com/evolution-gaming/tsc-silent",
   "files": [
     "/src",
     "/dist",
