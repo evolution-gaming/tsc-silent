@@ -115,7 +115,14 @@ if (argv.watch) {
     assertDiagnostics(configParseResult.errors, formatHost, false);
 
     const compilerHost = ts.createCompilerHost(configParseResult.options);
-    const program = ts.createProgram(configParseResult.fileNames, configParseResult.options, compilerHost);
+    const programOptions = {
+        rootNames: configParseResult.fileNames,
+        options: configParseResult.options,
+        projectReferences: configParseResult.projectReferences,
+        host: compilerHost,
+        configFileParsingDiagnostics: ts.getConfigFileParsingDiagnostics(configParseResult)
+    };
+    const program = ts.createProgram(programOptions);
     const emitResult = program.emit();
     process.exit(
         assertDiagnostics(ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics), compilerHost),
