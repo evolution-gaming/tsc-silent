@@ -4,7 +4,7 @@
   "description": "tsc with --supress",
   "main": "dist/index.js",
   "scripts": {
-    "build": "rm -r dist && tsc",
+    "build": "rm -rf dist && tsc",
     "version": "yarn build && git add .",
     "prepublish": "yarn build",
     "postversion": "git push && git push --tags"
