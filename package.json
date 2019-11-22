@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "rm -r dist && tsc",
+    "postbuild": "chmod +x dist/tsc-silent.js",
     "version": "yarn build && git add .",
     "prepublish": "yarn build",
     "postversion": "git push && git push --tags"
@@ -34,6 +35,6 @@
     "yargs": "12 || 13"
   },
   "devDependencies": {
-    "typescript": "3.1.6"
+    "typescript": "3.7.2"
   }
 }

@@ -7,18 +7,29 @@ interface Argv {
     stats: boolean;
     help: boolean;
     suppressConfig?: string;
+
+    // --build mode
+    build: string;
+    incremental: boolean;
+    force: boolean;
+    verbose: boolean;
+
     _: string[];
 }
 const argv: Argv = require("yargs")
     .array("suppress").default("suppress", [])
     .string("compiler").default("compiler", "node_modules/typescript/lib/typescript.js")
     .string("project").alias("project", "p")
+    .string("build").default("build", false).alias("build", "b")
     .boolean("watch").default("watch", false).alias("watch", "w")
+    .boolean("verbose").default("verbose", false).alias("verbose", "v")
+    .boolean("force").default("force", false).alias("force", "v")
+    .boolean("incremental").default("incremental", false).alias("incremental", "v")
     .boolean("stats").default("stats", false)
     .boolean("help")
     .parse(process.argv);
 
-if (!argv.project || argv.help || argv._.length > 2) {
+if (argv.help) {
     printUsage();
     process.exit(1);
 }
@@ -106,6 +117,19 @@ if (argv.watch) {
         origPostProgramCreate!(program);
     };
     ts.createWatchProgram(watchCompilerHost);
+} else if (argv.build) {
+    const solutionBuilderHost = ts.createSolutionBuilderHost();
+    const accumulatedDiagnostics = [];
+    solutionBuilderHost.reportDiagnostic = function (diag) {
+        accumulatedDiagnostics.push(diag);
+    }
+    const buildOptions: ts.BuildOptions = {
+        verbose: argv.verbose,
+        force: argv.force,
+        incremental: argv.incremental,
+    }
+    const solutionBuilder = ts.createSolutionBuilder(solutionBuilderHost, ["./tsconfig.dist.json"], buildOptions);
+    solutionBuilder.build();
 } else {
     const configObject = ts.parseConfigFileTextToJson(argv.project, fs.readFileSync(argv.project).toString());
     assertDiagnostics(configObject.error, formatHost, false);
@@ -124,7 +148,7 @@ if (argv.watch) {
 
 // @ts-ignore   // ********************************
 return;         // Only functions follow this point
-                // ********************************
+// ********************************
 
 function assertDiagnostics(
     diagnostics: ts.Diagnostic[] | ts.Diagnostic | undefined,
