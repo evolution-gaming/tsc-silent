@@ -41,8 +41,22 @@ You have to pass either `--suppress` or `--suppressConfig`.
 
 ### `--suppress`
 
+Let's ignore error `7017` in `src/js/` directory and errors `2322, 2339, 2344` in `/src/legacy/`:
+
 ```bash
-tsc-silent -p tsconfig.json --suppress 7017@src/js/ 2322,2339,2344@/src/legacy/
+tsc-silent -p tsconfig.json --suppress 7017@/src/js/ 2322,2339,2344@/src/legacy/
+```
+
+or, ignore all errors in `/src/legacy/` folder
+
+```bash
+tsc-silent -p tsconfig.json --suppress @/src/legacy/
+```
+
+or, completely ignore all errors
+
+```bash
+tsc-silent -p tsconfig.json --suppress @
 ```
 
 ### `--suppressConfig`
@@ -51,4 +65,9 @@ tsc-silent -p tsconfig.json --suppress 7017@src/js/ 2322,2339,2344@/src/legacy/
 tsc-silent -p tsconfig.json --suppressConfig tsc-silent.config.js
 ```
 
-See [example.config.js](./example.config.js) for more details.
+See [example.config.js](./example.config.js).
+
+
+## Intended/typical use
+
+Check out [the article](https://birukov.me/blog/all/tsc-silent.html) to see the intended use.
