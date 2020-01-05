@@ -27,11 +27,11 @@
   "license": "MIT",
   "dependencies": {
     "@types/node": "10.12.7",
-    "yargs": "12 || 13"
+    "yargs": "12 - 15"
   },
   "peerDependencies": {
     "typescript": ">=2.9",
-    "yargs": "12 || 13"
+    "yargs": "12 - 15"
   },
   "devDependencies": {
     "typescript": "3.1.6"
