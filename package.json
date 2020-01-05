@@ -6,7 +6,7 @@
   "scripts": {
     "build": "rm -rf dist && tsc",
     "version": "yarn build && git add .",
-    "prepublish": "yarn build",
+    "prepublishOnly": "yarn build",
     "postversion": "git push && git push --tags"
   },
   "bin": {
@@ -35,5 +35,8 @@
   },
   "devDependencies": {
     "typescript": "3.1.6"
+  },
+  "engines": {
+    "npm": ">=5"
   }
 }
