@@ -74,7 +74,7 @@ const formatHost: ts.FormatDiagnosticsHost = {
 
 if (argv.createSourceFile) {
   const originalCreateSourceFile = ts.createSourceFile;
-  ts.createSourceFile = require(argv.createSourceFile)(originalCreateSourceFile);
+  ts.createSourceFile = require(`${process.cwd()}/${argv.createSourceFile}`)(originalCreateSourceFile);
 }
 
 if (argv.watch) {
