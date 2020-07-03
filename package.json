@@ -2,7 +2,7 @@
   "name": "tsc-silent",
   "version": "1.2.1",
   "description": "tsc with --supress",
-  "main": "dist/index.js",
+  "main": "dist/tsc-silent.js",
   "scripts": {
     "build": "rm -rf dist && tsc",
     "version": "yarn build && git add .",
