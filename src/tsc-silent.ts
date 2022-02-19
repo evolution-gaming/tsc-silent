@@ -126,7 +126,7 @@ if (argv.watch) {
     const emitResult = program.emit();
 
     if (configParseResult.options.noEmitOnError) {
-      console.warn('You have `noEmitOnError` enabled, if any error occurs TypeScript will not generate any JavaScript output files.');
+      console.warn('You have `noEmitOnError` enabled, if any error occurs TypeScript will not generate any JavaScript output files even if `tsc-silent` exits with 0.');
     }
 
     process.exit(
